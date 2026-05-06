@@ -6,6 +6,27 @@ import validator from "validator"
 // login user
 const loginUser = async (req,res)=>{
 
+    const {email,password} = req.body;
+    try{
+        const user = await userModel.findOne({email});
+
+        if(!user){
+            return res.json({success:false,message:"User not found"});
+        }
+
+        const isMatch = await bcrypt.compare(password,user.password);
+        
+        if(!isMatch){
+            return res.json({success:false,message:"Invalid credentials"});
+        }
+
+        const token = createToken(user._id);
+        res.json({success:true,message:"Login successful",token});
+        
+    }catch(err){
+        console.log(err);
+        res.json({success:false,message:err.message})
+    }
 }
 
 const createToken = (id)=>{
@@ -42,6 +63,7 @@ const registerUser = async (req,res)=>{
 
         const token = createToken(user._id);
         res.json({success:true,message:"User registered successfully",token})
+
     }catch(err){
         console.log(err);
         res.json({success:false,message:err.message})
