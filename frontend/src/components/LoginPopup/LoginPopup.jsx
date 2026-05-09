@@ -1,10 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './LoginPopup.css'
 import { assets } from '../../assets/assets';
 
 
 const LoginPopup = ({ setshowLogin }) => {
     const [currState,setcurrState] = React.useState("Login");
+    const [data,setData] = React.useState({
+        name:"",
+        email:"",
+        password:""
+    })
+
+    const onChangeHandler = (e)=>{
+        const name = e.target.name;
+        const value = e.target.value;
+        setData((prev)=>({...prev,[name]:value}))
+    }
   return (
     <div className='login-popup'>
         <form className='login-form-container' >
@@ -14,10 +25,10 @@ const LoginPopup = ({ setshowLogin }) => {
             </div>
             <div className="login-popup-input">
                 {
-                    currState==="Login"?<></>:<input type="text" placeholder="Enter your name" required />
+                    currState==="Login"?<></>:<input name='name' onChange={onChangeHandler} value={data.name} type="text" placeholder="Enter your name" required />
                 }
-                <input type="email" placeholder="Enter your email" required />
-                <input type="password" placeholder="Enter your password" required />
+                <input name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder="Enter your email" required />
+                <input name='password' onChange={onChangeHandler} value={data.password} type="password" placeholder="Enter your password" required />
                 <button>{currState==="Sign Up"?"Create Account":"Login"}</button>
                 <div className="login-popup-condition">
                     <input type="checkbox" required/>
